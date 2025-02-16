@@ -1,93 +1,69 @@
 import java.util.*;
-
-public class GraphsA {
-    static class Edge {
+public class GraphsA{
+    static class Edge{
         int src, dest;
-
-        public Edge(int s, int d) {
-            this.src = s;
-            this.dest = d;
+        Edge(int src, int dest){
+            this.src = src;
+            this.dest = dest;
         }
     }
-
-    // Creating the graph as an adjacency list
-    public static void createGraph(ArrayList<Edge>[] graph) {
-        for (int i = 0; i < graph.length; i++) {
-            graph[i] = new ArrayList<>(); // Initialize each list
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for(int i=0; i<graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
         }
-
-        // Adding edges (Undirected Graph)
-        graph[1].add(new Edge(1, 2));
+        graph[0].add(new Edge(0, 1));
+        graph[0].add(new Edge(0, 2));
+        graph[1].add(new Edge(1, 0));
         graph[1].add(new Edge(1, 3));
-        graph[2].add(new Edge(2, 1));
+        graph[2].add(new Edge(2, 0));
         graph[2].add(new Edge(2, 3));
-        graph[2].add(new Edge(2, 5));
         graph[3].add(new Edge(3, 1));
         graph[3].add(new Edge(3, 2));
-        graph[3].add(new Edge(3, 4));
-        graph[4].add(new Edge(4, 3));
-        graph[4].add(new Edge(4, 5));
-        graph[5].add(new Edge(5, 2));
-        graph[5].add(new Edge(5, 3));
-        graph[5].add(new Edge(5, 4));
     }
-
-    // Breadth-First Search (BFS)
-    public static void bfs(ArrayList<Edge>[] graph, int v) {
-        boolean[] visited = new boolean[v + 1];
-        Queue<Integer> queue = new LinkedList<>();
-
-        System.out.print("BFS Traversal: ");
-        queue.add(1); // Start from node 1
-        visited[1] = true;
-
-        while (!queue.isEmpty()) {
-            int node = queue.poll();
-            System.out.print(node + " ");
-            
-            for (Edge e : graph[node]) {
-                if (!visited[e.dest]) {
-                    queue.add(e.dest);
+    public static void display(ArrayList<Edge> graph[]){
+        for(int i=0; i<graph.length; i++){
+            System.out.print(i + " -> ");
+            for(Edge e: graph[i]){
+                System.out.print("[" + e.src + " -> " + e.dest + "] ");
+            }
+            System.out.println();
+        }
+    }
+    public static void bfs(ArrayList<Edge> graph[], int src, boolean visited[]){
+        Queue<Integer> q = new LinkedList<>();
+        q.add(src);
+        visited[src] = true;
+        while(q.size() > 0){
+            int rem = q.remove();
+            System.out.print(rem + " ");
+            for(Edge e: graph[rem]){
+                if(visited[e.dest] == false){
                     visited[e.dest] = true;
+                    q.add(e.dest);
                 }
             }
         }
-        System.out.println();
     }
-
-    // Depth-First Search (DFS)
-    public static void dfs(ArrayList<Edge>[] graph, int v) {
-        boolean[] visited = new boolean[v + 1];
-        System.out.print("DFS Traversal: ");
-        dfsUtil(graph, 1, visited);
-        System.out.println();
-    }
-
-    private static void dfsUtil(ArrayList<Edge>[] graph, int node, boolean[] visited) {
-        visited[node] = true;
-        System.out.print(node + " ");
-
-        for (Edge e : graph[node]) {
-            if (!visited[e.dest]) {
-                dfsUtil(graph, e.dest, visited);
+    public static void dfs(ArrayList<Edge> graph[], int src, boolean visited[]){
+        visited[src] = true;
+        System.out.print(src + " ");
+        for(Edge e: graph[src]){
+            if(visited[e.dest] == false){
+                dfs(graph, e.dest, visited);
             }
         }
     }
-
-    public static void main(String[] args) {
-        int v = 5;
-        ArrayList<Edge>[] graph = new ArrayList[v + 1]; // 1-based indexing
+    public static void main(String[] args){
+        int n = 4;
+        ArrayList<Edge> graph[] = new ArrayList[n];
         createGraph(graph);
-
-        // Print adjacent nodes of vertex 5
-        System.out.print("Adjacent nodes of vertex 5: ");
-        for (Edge e : graph[5]) {
-            System.out.print(e.dest + " ");
-        }
+        display(graph);
+        boolean visited[] = new boolean[n];
+        System.out.print("BFS: ");
+        bfs(graph, 0, visited);
         System.out.println();
-
-        // Perform BFS and DFS traversals
-        bfs(graph, v);
-        dfs(graph, v);
+        Arrays.fill(visited, false);
+        System.out.print("DFS: ");
+        dfs(graph, 0, visited);
     }
 }
