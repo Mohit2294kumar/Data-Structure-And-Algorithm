@@ -6,23 +6,23 @@ public class dpA{
         }
         return fib(n-1)+fib(n-2);
     }
-    //Using Memoization
-    public static int fib(int n, int[] dp){
+    //Using Memoization tc
+    public static int fib1(int n, int[] dp){
         if(n==0||n==1){
             return n;
         }
         if(dp[n]!=0){
             return dp[n];
         }
-        dp[n]=fib(n-1,dp)+fib(n-2,dp);
+        dp[n]=fib1(n-1,dp)+fib1(n-2,dp);
         return dp[n];
     }
     public static void main(String[] args){
         int n=10;
         System.out.println(fib(n));
         int[] dp=new int[n+1];
-        System.out.println(fib(n,dp));
-        //Using Tabulation
+        System.out.println(fib1(n,dp));
+        //Using Tabulation tc O(n) sc O(n)
         int[] dp1=new int[n+1];
         dp1[0]=0;
         dp1[1]=1;
